@@ -6,7 +6,7 @@ import java.util.List;
 public class Account {
     private final List<Transaction> transactions;
     private float balance;
-    private String holder;
+    private final String holder;
 
     public List<Transaction> getTransactions() {
         return transactions;
@@ -24,10 +24,6 @@ public class Account {
         return holder;
     }
 
-    public void setHolder(String holder) {
-        this.holder = holder;
-    }
-
     public Account(String holder) {
         transactions = new ArrayList<>();
         balance = 0;
@@ -36,11 +32,18 @@ public class Account {
 
     public void deposit(float amount) {
         balance += amount;
-        //TODO: Implement Transaction!
+        var tr = new Transaction(amount, TransactionType.DEPOSIT);
+        transactions.add(tr);
     }
 
-    public  void withdraw(float amount) {
-
+    public  void withdraw(float amount) throws InsufficientFundsException {
+        if (amount > this.balance) {
+            throw new InsufficientFundsException("Fondi non sufficienti nel conto");
+        } else {
+            this.balance -= amount;
+            var tr = new Transaction(amount, TransactionType.WITHDRAW);
+            transactions.add(tr);
+        }
     }
 
 }
